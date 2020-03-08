@@ -1,0 +1,6 @@
+USERNAME = ""
+PASSWORD = ""
+LOGIN_LINK = "https://rms-pk.lel.asia/login"
+FILE_NAME = "sample.xlsx"
+COLUMN_NAME = "Tracking IDs"
+SHEET_NAME = "Sheet1"
