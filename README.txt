@@ -1,3 +1,8 @@
+About
+A web crawler based on Selenium/Helium to automate the mundane task of manually copy pasting ID's from an excel and pressing delete on a website.
+
+
+
 NOTE:
 Excel file and config file MUST be in the same directory.
 Change settings and file names as needed in the config file.
