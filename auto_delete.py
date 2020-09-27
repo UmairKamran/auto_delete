@@ -2,7 +2,6 @@ from helium import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 import pandas as pd
 import os
 from pprint import pprint
@@ -28,14 +27,10 @@ def login():
     try:
         print(f'Attempting to login with username: {USERNAME} and password: {PASSWORD}')
         driver = start_chrome(url=LOGIN_LINK, headless=True)
-        time.sleep(1)
         write(USERNAME, into="User name")
         write(PASSWORD, into="Password")
-        time.sleep(1)
         click('sign in')
-        time.sleep(1)
         click('pending cs')
-        time.sleep(1)
         print("Login successful.")
         return driver
     except Exception as error:
@@ -48,16 +43,13 @@ def enter_and_delete_id(driver, one_id):
 
     print(f"Attempting to delete ID={one_id}")
     write(one_id, into="Scan or enter")
-    time.sleep(2)
     filter_btn = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "TEST-FILTER-BUTTON")))
 
     driver.execute_script("(arguments[0]).click();", filter_btn)
-    time.sleep(2)
 
     try:
         checkbox = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "select_all_packages")))
         driver.execute_script("(arguments[0]).click();", checkbox)
-        time.sleep(2)
         delete_btn = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "DELETE_N_PACKAGES")))
         number_of_packages_found = delete_btn.text.split()[1]
         print(f"Number packages found for ID({one_id}) = {number_of_packages_found}")
@@ -69,13 +61,10 @@ def enter_and_delete_id(driver, one_id):
 
         print("Attempting delete.")
         driver.execute_script("(arguments[0]).click();", delete_btn)
-        time.sleep(2)
         click('confirm')
 
         print("Attempted delete. Double checking ...")
-        time.sleep(2)
         double_check_delete(driver, one_id)
-        time.sleep(2)
 
     except Exception as error:
         NOT_FOUND.append(one_id)
@@ -85,23 +74,19 @@ def enter_and_delete_id(driver, one_id):
 
 def double_check_delete(driver, one_id):
     write(one_id, into="Scan or enter")
-    time.sleep(2)
     filter_btn = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "TEST-FILTER-BUTTON")))
     driver.execute_script("(arguments[0]).click();", filter_btn)
-    time.sleep(2)
 
     try:
         # If we still find "select all packages" checkbox then ID was not deleted
         WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "select_all_packages")))
         print(f"Attempted delete unsuccessful for ID={one_id}.")
-        time.sleep(2)
         DELETE_ATTEMPTED_BUT_FAILED.append(one_id)
 
     except Exception as error:
         SUCCESSFULLY_DELETED.append(one_id)
         print(f"Successfully deleted packages against ID={one_id}.")
         print(error)
-        time.sleep(2)
 
 
 def read_file():
